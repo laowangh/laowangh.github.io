@@ -15,16 +15,16 @@
   
     <meta name="keywords" content="python, 加/解密, 密码学, 编程" />
   
-  <meta name="description" content="0x01 维吉尼亚加解密(python)Vigenenre密码是最著名的多表代换密码，是法国著名密码学家Vigenenre发明的。Vigenenre密码使用一个词组作为密钥，密钥中每一个字母用来确定一个代换表，每一个密钥字母被用来加密一个明文字母，第一个密钥字母加密第一个明文字母，第二个密钥字母加密第二个明文字母，等所有密钥字母使用完后，密钥再次循环使用，于是加解密前需先将明密文按照密钥长度进行分">
+  <meta name="description" content="0x01 维吉尼亚加解密(python)Vigenenre密码是最著名的多表代换密码，是法国著名密码学家Vigenenre发明的。Vigenenre密码使用一个词组作为密钥，密钥中每一个字母用来确定一个代换表，每一个密钥字母被用来加密一个明文字母，第一个密钥字母加密第一个明文字母，第二个密钥字母加密第二个明文字母，等所有密钥字母使用完后，密钥再次循环使用。  例如：  这样我们可以先构造加密函数和">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CUMT2021密码学课程设计作业一">
 <meta property="og:url" content="http://example.com/2021/11/23/CUMT2021%E5%AF%86%E7%A0%81%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%BD%9C%E4%B8%9A%E4%B8%80/index.html">
 <meta property="og:site_name" content="菜狗呜呜呜">
-<meta property="og:description" content="0x01 维吉尼亚加解密(python)Vigenenre密码是最著名的多表代换密码，是法国著名密码学家Vigenenre发明的。Vigenenre密码使用一个词组作为密钥，密钥中每一个字母用来确定一个代换表，每一个密钥字母被用来加密一个明文字母，第一个密钥字母加密第一个明文字母，第二个密钥字母加密第二个明文字母，等所有密钥字母使用完后，密钥再次循环使用，于是加解密前需先将明密文按照密钥长度进行分">
+<meta property="og:description" content="0x01 维吉尼亚加解密(python)Vigenenre密码是最著名的多表代换密码，是法国著名密码学家Vigenenre发明的。Vigenenre密码使用一个词组作为密钥，密钥中每一个字母用来确定一个代换表，每一个密钥字母被用来加密一个明文字母，第一个密钥字母加密第一个明文字母，第二个密钥字母加密第二个明文字母，等所有密钥字母使用完后，密钥再次循环使用。  例如：  这样我们可以先构造加密函数和">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/null">
 <meta property="article:published_time" content="2021-11-23T12:42:13.000Z">
-<meta property="article:modified_time" content="2021-11-23T13:16:25.368Z">
+<meta property="article:modified_time" content="2021-11-23T15:03:53.582Z">
 <meta property="article:author" content="Wang_sang">
 <meta property="article:tag" content="密码学">
 <meta property="article:tag" content="编程">
@@ -239,16 +239,22 @@
                     <i class="fa fa-edit"></i> 
                     
                     
-                        203
+                        623
                     
                     字
                 </li>
+                
+                    <li id="/2021/11/23/CUMT2021%E5%AF%86%E7%A0%81%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%BD%9C%E4%B8%9A%E4%B8%80/" class="leancloud_visitors" data-flag-title="CUMT2021密码学课程设计作业一">
+                        <i class="fa fa-eye"></i>
+                        <span class="leancloud-visitors-count"> </span> 次阅读
+                    </li>
+                    
                 
             </ul>
         </header>
         <div class="kratos-post-content">
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
-                本文最后编辑于 <time datetime="1637673385368"></time> 前，其中的内容可能需要更新。
+                本文最后编辑于 <time datetime="1637679833582"></time> 前，其中的内容可能需要更新。
             </div>
             
                 <div class="kratos-post-inner-toc">
@@ -256,7 +262,13 @@
                 </div>
             
             <hr />
-            <h1 id="0x01-维吉尼亚加解密-python"><a href="#0x01-维吉尼亚加解密-python" class="headerlink" title="0x01 维吉尼亚加解密(python)"></a>0x01 维吉尼亚加解密(python)</h1><p>Vigenenre密码是最著名的多表代换密码，是法国著名密码学家Vigenenre发明的。Vigenenre密码使用一个词组作为密钥，密钥中每一个字母用来确定一个代换表，每一个密钥字母被用来加密一个明文字母，第一个密钥字母加密第一个明文字母，第二个密钥字母加密第二个明文字母，等所有密钥字母使用完后，密钥再次循环使用，于是加解密前需先将明密文按照密钥长度进行分组。</p>
+            <h1 id="0x01-维吉尼亚加解密-python"><a href="#0x01-维吉尼亚加解密-python" class="headerlink" title="0x01 维吉尼亚加解密(python)"></a>0x01 维吉尼亚加解密(python)</h1><p>Vigenenre密码是最著名的多表代换密码，是法国著名密码学家Vigenenre发明的。Vigenenre密码使用一个词组作为密钥，密钥中每一个字母用来确定一个代换表，每一个密钥字母被用来加密一个明文字母，第一个密钥字母加密第一个明文字母，第二个密钥字母加密第二个明文字母，等所有密钥字母使用完后，密钥再次循环使用。</p>
+<p><img src="CUMT2021%E5%AF%86%E7%A0%81%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%BD%9C%E4%B8%9A%E4%B8%80/20180910173109_58996.png" alt="img"></p>
+<p>例如：</p>
+<p><img src="CUMT2021%E5%AF%86%E7%A0%81%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%BD%9C%E4%B8%9A%E4%B8%80/20180910173353_81009.png" alt="img"></p>
+<p>这样我们可以先构造加密函数和解密函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#加密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Encrypto</span>(<span class="params">m,key</span>):</span></span><br><span class="line">	mlen=<span class="built_in">len</span>(m)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">	<span class="comment"># 都转换为大写字母</span></span><br><span class="line">	m=m.upper()</span><br><span class="line">	key=key.upper()</span><br><span class="line">	p=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="comment">#开始加密</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, mlen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		p+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(m[i])-<span class="number">65</span>)+(<span class="built_in">ord</span>(key[j])-<span class="number">65</span>))%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> p</span><br><span class="line"><span class="comment"># 解密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Decrypto</span>(<span class="params">p,key</span>):</span></span><br><span class="line">	plen=<span class="built_in">len</span>(p)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">	m=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="comment">#开始解密</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, plen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		m+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(p[i])-<span class="number">65</span>)-((<span class="built_in">ord</span>(key[j])-<span class="number">65</span>)%<span class="number">26</span>)+<span class="number">26</span>)%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> m</span><br></pre></td></tr></table></figure>
+
 
         </div>
         
@@ -363,6 +375,32 @@
             
         </nav>
     
+    
+        <div id="v-comments" class="post-comments"></div>
+<script>
+    var load_comm = () => {
+        const init = () => {
+            new Valine({
+                el: '#v-comments',
+                appId: 'O8IPaoqQVCXOc0WyRcDAfSuY-MdYXbMMI',
+                appKey: 'L0DK8k6tXDVS2e5sgNfWPfNd',
+                visitor: true,
+                enableQQ: true,
+                path: '/2021/11/23/CUMT2021%E5%AF%86%E7%A0%81%E5%AD%A6%E8%AF%BE%E7%A8%8B%E8%AE%BE%E8%AE%A1%E4%BD%9C%E4%B8%9A%E4%B8%80/'
+                notify: false, 
+                verify: false, 
+            });
+        }
+        if (typeof Valine == 'undefined') {
+            const src = 'https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js';
+            $.getScript(src, init);
+        } else {
+            init();
+        }
+    };
+</script>
+<noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="https://valine.js.org/">comments powered by Valine.</a></noscript>
+
     
 </article>
 
