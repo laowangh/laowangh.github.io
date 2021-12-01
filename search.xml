@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>维吉尼亚密码的学习</title>
+    <url>/2021/11/23/CUMT2021%E7%BB%B4%E5%90%89%E5%B0%BC%E4%BA%9A%E5%AF%86%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="0x01-简单的多表代换"><a href="#0x01-简单的多表代换" class="headerlink" title="0x01 简单的多表代换"></a>0x01 简单的多表代换</h1><p>Vigenenre密码是最著名的多表代换密码，是法国著名密码学家Vigenenre发明的。Vigenenre密码使用一个词组作为密钥，密钥中每一个字母用来确定一个代换表，每一个密钥字母被用来加密一个明文字母，第一个密钥字母加密第一个明文字母，第二个密钥字母加密第二个明文字母，等所有密钥字母使用完后，密钥再次循环使用。</p>
+<p><img src="20180910173109_58996.png" alt="img"></p>
+<p>例如：</p>
+<p><img src="20180910173353_81009.png" alt="img"></p>
+<p>这样我们可以先构造加密函数和解密函数：</p>
+<blockquote>
+<p>输入只有英文字母。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#加密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Encrypto</span>(<span class="params">m,key</span>):</span></span><br><span class="line">	mlen=<span class="built_in">len</span>(m)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">	<span class="comment"># 都转换为大写字母</span></span><br><span class="line">	m=m.upper()</span><br><span class="line">	key=key.upper()</span><br><span class="line">	p=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="comment">#开始加密</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, mlen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		p+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(m[i])-<span class="number">65</span>)+(<span class="built_in">ord</span>(key[j])-<span class="number">65</span>))%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> p</span><br><span class="line"><span class="comment"># 解密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Decrypto</span>(<span class="params">p,key</span>):</span></span><br><span class="line">	plen=<span class="built_in">len</span>(p)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">    p=p.upper()</span><br><span class="line">    key=key.upper()</span><br><span class="line">	m=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="comment">#开始解密</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, plen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		m+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(p[i])-<span class="number">65</span>)-((<span class="built_in">ord</span>(key[j])-<span class="number">65</span>)%<span class="number">26</span>)+<span class="number">26</span>)%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> m</span><br></pre></td></tr></table></figure>
+
+<p>一个简单的加解密：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment">#加密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Encrypto</span>(<span class="params">m,key</span>):</span></span><br><span class="line">	mlen=<span class="built_in">len</span>(m)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">	<span class="comment"># 都转换为大写字母</span></span><br><span class="line">	m=m.upper()</span><br><span class="line">	key=key.upper()</span><br><span class="line">	p=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="comment">#开始加密</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, mlen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		p+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(m[i])-<span class="number">65</span>)+(<span class="built_in">ord</span>(key[j])-<span class="number">65</span>))%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> p</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Decrypto</span>(<span class="params">p,key</span>):</span></span><br><span class="line">	plen=<span class="built_in">len</span>(p)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">	key=key.upper()</span><br><span class="line">	m=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="comment">#开始解密</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, plen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		m+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(p[i])-<span class="number">65</span>)-((<span class="built_in">ord</span>(key[j])-<span class="number">65</span>)%<span class="number">26</span>)+<span class="number">26</span>)%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> m</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">True</span>):</span><br><span class="line">		choice = <span class="built_in">input</span>(<span class="string">&quot;加密请输入1 解密请输入2: &quot;</span>)</span><br><span class="line">		<span class="keyword">if</span> choice == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">			m = <span class="built_in">input</span>(<span class="string">&quot;请输入明文: &quot;</span>)</span><br><span class="line">			key = <span class="built_in">input</span>(<span class="string">&quot;请输入密钥: &quot;</span>)</span><br><span class="line">			p=Encrypto(m, key)</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot;加密后的密文是: %s&quot;</span> % p)</span><br><span class="line">		<span class="keyword">elif</span> choice == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">			p = <span class="built_in">input</span>(<span class="string">&quot;请输入密文: &quot;</span>)</span><br><span class="line">			key = <span class="built_in">input</span>(<span class="string">&quot;请输入密钥: &quot;</span>)</span><br><span class="line">			m=Decrypto(p, key)</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot;解密后的明文是: %s&quot;</span> % m)</span><br><span class="line">		<span class="keyword">else</span>:</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot;不存在该口令&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	main()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">运行结果：</span><br><span class="line">加密请输入1 解密请输入2: 1</span><br><span class="line">请输入明文: sedagaetjaet</span><br><span class="line">请输入密钥: abc</span><br><span class="line">加密后的密文是: SFFAHCEULAFV</span><br><span class="line">加密请输入1 解密请输入2: 2</span><br><span class="line">请输入密文: SFFAHCEULAFV</span><br><span class="line">请输入密钥: abc</span><br><span class="line">解密后的明文是: SEDAGAETJAET</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对于单表代换，假如<strong>’P‘</strong>是密文中出现次数最多的字母，则<strong>’P‘</strong>所代表的明文很有可能是’E‘（在明文为英文的前提下）,因为E是经过统计后所有字母里频率最大的字母。由此可见，运用统计的方法的确有助于我们破解这类代换密码。</p>
+</blockquote>
+<p>维吉尼亚密码也有着很明显的漏洞。如果我们知道了密钥的长度，那密文就可以被看作是交织在一起的恺撒密码。根据密钥长度我们可以将密文进行分组，每一组各自的偏移量都是相同的，从而每一组进行单独破解。那么，重点就变成了如何判断密钥长度，下面介绍两种方法。</p>
+<h1 id="0x02-卡希斯基试验"><a href="#0x02-卡希斯基试验" class="headerlink" title="0x02 卡希斯基试验"></a>0x02 卡希斯基试验</h1><blockquote>
+<p>卡西斯基试验是基于类似the这样的常用单词有可能被同样的密钥字母进行加密，从而在密文中重复出现。</p>
+<p>例如：</p>
+<ul>
+<li>明文：CRYPTO IS SHORT FOR CRYPTOGRAPHY</li>
+<li>密钥：ABCD</li>
+<li>密文：==CSASTP== KV SIQUT GQU ==CSASTP==IUAQJB </li>
+</ul>
+<p>此时重复出现的位置为1和17，那么密钥长度就有可能是16的一个公因数，这些公因数为一组。段落越长越好，求出n组公因数后，求这些公因数的交集，那么可以大致确定密钥长度。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#	Q求所有因数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">yinshu</span>(<span class="params">num</span>):</span></span><br><span class="line">    yinshus = []</span><br><span class="line">    times = <span class="built_in">int</span>(math.sqrt(num))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,times):</span><br><span class="line">        <span class="keyword">if</span> num % i == <span class="number">0</span>:</span><br><span class="line">            yinshus.append(i)</span><br><span class="line">            t = <span class="built_in">int</span>(num / i)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> t == i:</span><br><span class="line">                yinshus.append(t)</span><br><span class="line">    yinshus.sort()</span><br><span class="line">    <span class="keyword">return</span> yinshus</span><br><span class="line"></span><br><span class="line"><span class="comment"># 卡希斯基实验</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kaxisiji</span>(<span class="params">s</span>):</span></span><br><span class="line">	s1=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">		s1+=s[x]</span><br><span class="line">	st= [each.start() <span class="keyword">for</span> each <span class="keyword">in</span> re.finditer(s1, s)]</span><br><span class="line">	h=<span class="built_in">len</span>(st)-<span class="number">1</span></span><br><span class="line">	nu=st[h]-st[h-<span class="number">1</span>]</span><br><span class="line">	gy=yinshu(nu)</span><br><span class="line">	c=gy</span><br><span class="line">	<span class="keyword">while</span> h&gt;=<span class="number">1</span>:</span><br><span class="line">		num=st[h]-st[h-<span class="number">1</span>]</span><br><span class="line">		gys=yinshu(num)</span><br><span class="line">		h-=<span class="number">1</span></span><br><span class="line">		c=[x <span class="keyword">for</span> x <span class="keyword">in</span> c <span class="keyword">if</span> x <span class="keyword">in</span> gys]</span><br><span class="line">	<span class="keyword">return</span> c</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>经过检验，卡希斯基法并不是完全能够确定密钥长度，有时候会出现空集的情况。单个重合指数也不好确定密钥长度，会出现密钥重复的情况或者密钥过长，建议两者结合，可能会更准确一点。</p>
+</blockquote>
+<h1 id="0x03-重合指数"><a href="#0x03-重合指数" class="headerlink" title="0x03 重合指数"></a>0x03 重合指数</h1><p><strong>重合指数</strong>：即相当于求在某个密文中随机无放回地抽取其中的两位，这两位的字母相同的概率。</p>
+<p><img src="image-20211130115245680.png"></p>
+<blockquote>
+<p>n=26,<em>f<del>i</del><em>是字母“i”出现在文本中的频率，</em>L</em>是文本的长度。</p>
+</blockquote>
+<blockquote>
+<p>一段完全随机的文本中，重合指数更接近0.038。但是任意一个单表替换加密的密文中，可以认为因为只是换了字母的长相，所以虽然文本看起来无意义，但这个统计特性仍然为正常语义的英文文本的性质，更接近于0.068。因此，我们可以利用这个特性破译这类密码。</p>
+<p>已知单表代换重合指数接近0.068，像维吉尼亚密码这类周期性多表代换(字母随机分布)，其重合指数更接近于0.038。故我们可以通过重合指数判断加密为单表代换还是多表代换。</p>
+<p>维吉尼亚密码可以被分解为若干组平移密码来破译，而一个明文足够长的平移密码的重合指数接近0.068。即如果我们选取某个k值，使得分组后的密文的重合指数接近0.068，则说明选取的k值与密钥的长度是一致的。</p>
+</blockquote>
+<p>了解过程就好办了，上代码！</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#词频统计  返回每个字母出现的次数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tongji</span>(<span class="params">s</span>):</span></span><br><span class="line">	a=<span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span></span><br><span class="line">	num=[]</span><br><span class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">		b=s.count(a[x])</span><br><span class="line">		num.append(b)</span><br><span class="line">	<span class="keyword">return</span> num</span><br><span class="line"><span class="comment">#进行分组 s是要进行分组的字符串，t为字符串的长度 返回一个分组列表</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fenzu</span>(<span class="params">s,t</span>):</span></span><br><span class="line">	slen=<span class="built_in">len</span>(s)</span><br><span class="line">	flag=p=<span class="number">0</span></span><br><span class="line">	q=math.ceil(slen/t)</span><br><span class="line">	m=t-slen%t</span><br><span class="line">	b=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">		b+=<span class="string">&quot; &quot;</span></span><br><span class="line">	st=s+b</span><br><span class="line">	s_fen=[]</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(t):	</span><br><span class="line">		j=[]</span><br><span class="line">		s_fen.append(j)</span><br><span class="line">		p=flag</span><br><span class="line">		<span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(q):</span><br><span class="line">			j.append(st[p])</span><br><span class="line">			p+=t</span><br><span class="line">		flag+=<span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> s_fen</span><br><span class="line"><span class="comment">#计算重合指数 </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">chong</span>(<span class="params">s,num</span>):</span></span><br><span class="line">	IC=<span class="number">0</span></span><br><span class="line">	sl=<span class="built_in">len</span>(s)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">		IC=IC+((num[i]-<span class="number">1</span>)*num[i])/((sl*(sl-<span class="number">1</span>)))</span><br><span class="line">	<span class="keyword">return</span> IC</span><br><span class="line"><span class="comment">#计算密钥长度为x时的重合指数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">keylength</span>(<span class="params">s,x</span>):</span></span><br><span class="line">	IC=<span class="number">0</span></span><br><span class="line">	s_list=fenzu(s,x)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(x):	</span><br><span class="line">		num=tongji(s_list[i-<span class="number">1</span>])</span><br><span class="line">		IC+=chong(s_list[i-<span class="number">1</span>],num)</span><br><span class="line">	IC=IC/x</span><br><span class="line">	<span class="keyword">return</span> IC	</span><br><span class="line"><span class="comment">#判断密钥长度 卡希斯基和重合指数双重验证</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">miyaochang</span>(<span class="params">s</span>):</span></span><br><span class="line">	c=kaxisiji(s)</span><br><span class="line">	<span class="keyword">if</span> c:</span><br><span class="line">		b=c.pop()+<span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span>: b=<span class="number">31</span></span><br><span class="line">	k=<span class="number">0</span></span><br><span class="line">	f=<span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,b):</span><br><span class="line">		IC=keylength(s,i)</span><br><span class="line">		<span class="keyword">if</span>(k&lt;IC):</span><br><span class="line">			k=IC</span><br><span class="line">			f=i</span><br><span class="line">	<span class="keyword">return</span> f</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x04-拟重合指数"><a href="#0x04-拟重合指数" class="headerlink" title="0x04 拟重合指数"></a>0x04 拟重合指数</h1><p>判断完密钥长度后，对每个分组，我们可以通过过拟重合指数判断每组偏移量。</p>
+<blockquote>
+<p>利用统计规律，IC=$\sum_{i=1}^n$ p<del>i</del>*(n<del>i</del>/L) 。 n为26，n<del>i</del>为字母出现频次，L为分组长度，p<del>i</del>为每个字母的统计出现概率。利用拟重合指数，当偏移为k时，我们可以求拟重合指数，若拟重合指数最接近0.068，代表k值为该组偏移量。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#计算拟重合指数,判断分组偏移量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">nichong</span>(<span class="params">s_biao,kl</span>):</span> <span class="comment"># kl为密钥长度，s_biao是已经分好组的表</span></span><br><span class="line">	w = [<span class="number">0.08166999999999999</span>, <span class="number">0.01492</span>, <span class="number">0.02782</span>, <span class="number">0.04253</span>, <span class="number">0.12702</span>, <span class="number">0.02228</span>, <span class="number">0.02015</span>, <span class="number">0.06094</span>, <span class="number">0.06966</span>, <span class="number">0.00153</span>, <span class="number">0.00772</span>, <span class="number">0.04025</span>, <span class="number">0.02406</span>, <span class="number">0.06749</span>, <span class="number">0.07507</span>, <span class="number">0.01929</span>, <span class="number">0.00095</span>, <span class="number">0.05987</span>, <span class="number">0.06326999999999999</span>, <span class="number">0.09055999999999999</span>, <span class="number">0.02758</span>, <span class="number">0.00978</span>, <span class="number">0.0236</span>, <span class="number">0.0015</span>, <span class="number">0.01974</span>, <span class="number">0.00074</span>]</span><br><span class="line">	a=<span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span></span><br><span class="line">	v=[]</span><br><span class="line">	k=<span class="number">0</span></span><br><span class="line">	M=<span class="number">0</span></span><br><span class="line">	m=s=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(kl):</span><br><span class="line">		v.append(<span class="number">0</span>)</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(kl):</span><br><span class="line">		s_biao[j]=cqu(s_biao[j])</span><br><span class="line">		<span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):  <span class="comment">#计算偏移量的</span></span><br><span class="line">			<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s_biao[j])):</span><br><span class="line">				m+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(s_biao[j][i])-<span class="number">65</span>)-((<span class="built_in">ord</span>(a[x])-<span class="number">65</span>)%<span class="number">26</span>)+<span class="number">26</span>)%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">			num=tongji(m)</span><br><span class="line">			<span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">				M=M+(w[e]*num[e]/<span class="built_in">len</span>(s_biao[<span class="number">0</span>]))</span><br><span class="line">			<span class="keyword">if</span>(k&lt;M):</span><br><span class="line">				k=M</span><br><span class="line">				v[j]=x</span><br><span class="line">			m=<span class="string">&quot;&quot;</span></span><br><span class="line">			M=<span class="number">0</span></span><br><span class="line">		k=<span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(kl):</span><br><span class="line">		s+=<span class="built_in">chr</span>(v[j]+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> s</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x05-最终结果"><a href="#0x05-最终结果" class="headerlink" title="0x05 最终结果"></a>0x05 最终结果</h1><p>现在，我们完善一下加解密函数，增加对输入密文和输出格式（五个一组看着舒服，不要纠结这个）的处理。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> wordninja</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="comment">#加密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Encrypto</span>(<span class="params">m,key</span>):</span></span><br><span class="line">	m=cqu(m)</span><br><span class="line">	mlen=<span class="built_in">len</span>(m)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">	<span class="comment"># 都转换为大写字母</span></span><br><span class="line">	m=m.upper()</span><br><span class="line">	key=key.upper()</span><br><span class="line">	p=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, mlen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		p+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(m[i])-<span class="number">65</span>)+(<span class="built_in">ord</span>(key[j])-<span class="number">65</span>))%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">    <span class="comment">#为了补齐分组最后不够的情况，要不然输出有问题，当然纯粹没必要写</span></span><br><span class="line">	i=<span class="number">5</span>-mlen%<span class="number">5</span></span><br><span class="line">	b=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(i):</span><br><span class="line">		b+=<span class="string">&quot; &quot;</span></span><br><span class="line">	st=p+b</span><br><span class="line">	new_text = <span class="string">&quot; &quot;</span>.join(re.findall(<span class="string">&quot;.&#123;5&#125;&quot;</span>,st))  </span><br><span class="line">	<span class="keyword">return</span> new_text</span><br><span class="line"><span class="comment"># 解密函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">Decrypto</span>(<span class="params">p,key</span>):</span></span><br><span class="line">	p=cqu(p)</span><br><span class="line">	plen=<span class="built_in">len</span>(p)</span><br><span class="line">	klen=<span class="built_in">len</span>(key)</span><br><span class="line">	p=p.upper()</span><br><span class="line">	key=key.upper()</span><br><span class="line">	m=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="comment">#开始解密</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, plen):</span><br><span class="line">		j=i%klen</span><br><span class="line">		m+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(p[i])-<span class="number">65</span>)-((<span class="built_in">ord</span>(key[j])-<span class="number">65</span>)%<span class="number">26</span>)+<span class="number">26</span>)%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">	m=m.lower()</span><br><span class="line">	jieguo=wordninja.split(m)</span><br><span class="line">	result = <span class="string">&quot; &quot;</span>.join(jieguo)</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line"><span class="comment">#	Q求所有因数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">yinshu</span>(<span class="params">num</span>):</span></span><br><span class="line">    yinshus = []</span><br><span class="line">    times = <span class="built_in">int</span>(math.sqrt(num))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,times):</span><br><span class="line">        <span class="keyword">if</span> num % i == <span class="number">0</span>:</span><br><span class="line">            yinshus.append(i)</span><br><span class="line">            t = <span class="built_in">int</span>(num / i)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> t == i:</span><br><span class="line">                yinshus.append(t)</span><br><span class="line">    yinshus.sort()</span><br><span class="line">    <span class="keyword">return</span> yinshus</span><br><span class="line"><span class="comment"># 卡希斯基实验</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kaxisiji</span>(<span class="params">s</span>):</span></span><br><span class="line">	s1=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">		s1+=s[x]</span><br><span class="line">	st= [each.start() <span class="keyword">for</span> each <span class="keyword">in</span> re.finditer(s1, s)]</span><br><span class="line">	h=<span class="built_in">len</span>(st)-<span class="number">1</span></span><br><span class="line">	nu=st[h]-st[h-<span class="number">1</span>]</span><br><span class="line">	gy=yinshu(nu)</span><br><span class="line">	c=gy</span><br><span class="line">	<span class="keyword">while</span> h&gt;=<span class="number">1</span>:</span><br><span class="line">		num=st[h]-st[h-<span class="number">1</span>]</span><br><span class="line">		gys=yinshu(num)</span><br><span class="line">		h-=<span class="number">1</span></span><br><span class="line">		c=[x <span class="keyword">for</span> x <span class="keyword">in</span> c <span class="keyword">if</span> x <span class="keyword">in</span> gys]</span><br><span class="line">	<span class="keyword">return</span> c</span><br><span class="line"><span class="comment">#进行分组</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fenzu</span>(<span class="params">s,t</span>):</span></span><br><span class="line">	slen=<span class="built_in">len</span>(s)</span><br><span class="line">	flag=p=<span class="number">0</span></span><br><span class="line">	q=math.ceil(slen/t)</span><br><span class="line">	m=t-slen%t</span><br><span class="line">	b=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">		b+=<span class="string">&quot; &quot;</span></span><br><span class="line">	st=s+b</span><br><span class="line">	s_fen=[]</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(t):	</span><br><span class="line">		j=[]</span><br><span class="line">		s_fen.append(j)</span><br><span class="line">		p=flag</span><br><span class="line">		<span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(q):</span><br><span class="line">			j.append(st[p])</span><br><span class="line">			p+=t</span><br><span class="line">		flag+=<span class="number">1</span></span><br><span class="line">	<span class="keyword">return</span> s_fen	</span><br><span class="line"><span class="comment">#判断密钥长度</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">miyaochang</span>(<span class="params">s</span>):</span></span><br><span class="line">	c=kaxisiji(s)</span><br><span class="line">	<span class="keyword">if</span> c:</span><br><span class="line">		b=c.pop()+<span class="number">1</span></span><br><span class="line">	<span class="keyword">else</span>: b=<span class="number">31</span></span><br><span class="line">	k=<span class="number">0</span></span><br><span class="line">	f=<span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,b):</span><br><span class="line">		IC=keylength(s,i)</span><br><span class="line">		<span class="keyword">if</span>(k&lt;IC):</span><br><span class="line">			k=IC</span><br><span class="line">			f=i</span><br><span class="line">	<span class="keyword">return</span> f		</span><br><span class="line"><span class="comment">#去掉非字母后密文</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cqu</span>(<span class="params">c</span>):</span>   </span><br><span class="line">    ci = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(c)):</span><br><span class="line">        <span class="keyword">if</span> (c[i].isalpha()):</span><br><span class="line">            ci += c[i]</span><br><span class="line">    <span class="keyword">return</span> ci</span><br><span class="line"><span class="comment">#计算密钥长度为x时的重合指数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">keylength</span>(<span class="params">s,x</span>):</span></span><br><span class="line">	IC=<span class="number">0</span></span><br><span class="line">	s_list=fenzu(s,x)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(x):	</span><br><span class="line">		num=tongji(s_list[i-<span class="number">1</span>])</span><br><span class="line">		IC+=chong(s_list[i-<span class="number">1</span>],num)</span><br><span class="line">	IC=IC/x</span><br><span class="line">	<span class="keyword">return</span> IC	</span><br><span class="line"><span class="comment">#词频统计</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tongji</span>(<span class="params">s</span>):</span></span><br><span class="line">	a=<span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span></span><br><span class="line">	num=[]</span><br><span class="line">	<span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">		b=s.count(a[x])</span><br><span class="line">		num.append(b)</span><br><span class="line">	<span class="keyword">return</span> num	</span><br><span class="line"><span class="comment">#计算重合指数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">chong</span>(<span class="params">s,num</span>):</span></span><br><span class="line">	IC=<span class="number">0</span></span><br><span class="line">	sl=<span class="built_in">len</span>(s)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">		IC=IC+((num[i]-<span class="number">1</span>)*num[i])/((sl*(sl-<span class="number">1</span>)))</span><br><span class="line">	<span class="keyword">return</span> IC</span><br><span class="line"><span class="comment">#计算拟重合指数,判断分组偏移量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">nichong</span>(<span class="params">s_biao,kl</span>):</span></span><br><span class="line">	w = [<span class="number">0.08166999999999999</span>, <span class="number">0.01492</span>, <span class="number">0.02782</span>, <span class="number">0.04253</span>, <span class="number">0.12702</span>, <span class="number">0.02228</span>, <span class="number">0.02015</span>, <span class="number">0.06094</span>, <span class="number">0.06966</span>, <span class="number">0.00153</span>, <span class="number">0.00772</span>, <span class="number">0.04025</span>, <span class="number">0.02406</span>, <span class="number">0.06749</span>, <span class="number">0.07507</span>, <span class="number">0.01929</span>, <span class="number">0.00095</span>, <span class="number">0.05987</span>, <span class="number">0.06326999999999999</span>, <span class="number">0.09055999999999999</span>, <span class="number">0.02758</span>, <span class="number">0.00978</span>, <span class="number">0.0236</span>, <span class="number">0.0015</span>, <span class="number">0.01974</span>, <span class="number">0.00074</span>]</span><br><span class="line">	a=<span class="string">&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span></span><br><span class="line">	v=[]</span><br><span class="line">	k=<span class="number">0</span></span><br><span class="line">	M=<span class="number">0</span></span><br><span class="line">	m=s=<span class="string">&quot;&quot;</span></span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(kl):</span><br><span class="line">		v.append(<span class="number">0</span>)</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(kl):</span><br><span class="line">		s_biao[j]=cqu(s_biao[j])</span><br><span class="line">		<span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):  <span class="comment">#计算偏移量的</span></span><br><span class="line">			<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(s_biao[j])):</span><br><span class="line">				m+=<span class="built_in">chr</span>(((<span class="built_in">ord</span>(s_biao[j][i])-<span class="number">65</span>)-((<span class="built_in">ord</span>(a[x])-<span class="number">65</span>)%<span class="number">26</span>)+<span class="number">26</span>)%<span class="number">26</span>+<span class="number">65</span>)</span><br><span class="line">			num=tongji(m)</span><br><span class="line">			<span class="keyword">for</span> e <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">26</span>):</span><br><span class="line">				M=M+(w[e]*num[e]/<span class="built_in">len</span>(s_biao[<span class="number">0</span>]))</span><br><span class="line">			<span class="keyword">if</span> k&lt;M:</span><br><span class="line">				k=M</span><br><span class="line">				v[j]=x</span><br><span class="line">			m=<span class="string">&quot;&quot;</span></span><br><span class="line">			M=<span class="number">0</span></span><br><span class="line">		k=<span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(kl):</span><br><span class="line">		s+=<span class="built_in">chr</span>(v[j]+<span class="number">65</span>)</span><br><span class="line">	<span class="keyword">return</span> s</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="literal">True</span>):</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&quot;\n&quot;</span>)</span><br><span class="line">		choice = <span class="built_in">input</span>(<span class="string">&quot;加密请输入1 有密钥解密请输入2 无密钥解密请输入3: &quot;</span>)</span><br><span class="line">		<span class="keyword">if</span> choice == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">			m = <span class="built_in">input</span>(<span class="string">&quot;请输入明文: &quot;</span>)</span><br><span class="line">			key = <span class="built_in">input</span>(<span class="string">&quot;请输入密钥: &quot;</span>)</span><br><span class="line">			p=Encrypto(m, key)</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot;加密后的密文是: %s&quot;</span> % p)</span><br><span class="line">		<span class="keyword">elif</span> choice == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">			p = <span class="built_in">input</span>(<span class="string">&quot;请输入密文: &quot;</span>)</span><br><span class="line">			key = <span class="built_in">input</span>(<span class="string">&quot;请输入密钥: &quot;</span>)</span><br><span class="line">			m=Decrypto(p, key)</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot;解密后的明文是: %s&quot;</span> % m)</span><br><span class="line">		<span class="keyword">elif</span> choice == <span class="string">&#x27;3&#x27;</span>:</span><br><span class="line">			s = <span class="built_in">input</span>(<span class="string">&quot;请输入密文: &quot;</span>)</span><br><span class="line">			s=cqu(s)</span><br><span class="line">			keylen=miyaochang(s)</span><br><span class="line">			s_biao=fenzu(s,keylen)</span><br><span class="line">			pianyi=nichong(s_biao,keylen)			</span><br><span class="line">			st=Decrypto(s,pianyi)</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot;可能的密钥是：%s&quot;</span>% pianyi)</span><br><span class="line">			<span class="built_in">print</span>(<span class="string">&quot;解密后的明文可能是: %s&quot;</span> % st)</span><br><span class="line">		<span class="keyword">else</span>: <span class="built_in">print</span>(<span class="string">&quot;不存在该口令&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">	main()</span><br></pre></td></tr></table></figure>
+
+<p>就这道题来说，密文是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CHREE VOAHM AERAT BIAXX WTNXB EEOPH BSBQM QEQER BWRVX UOAKX AOSXX WEAHB WGJMM QMNKG RFVGX WTRZX WIAKL XFPSK AUTEM NDCMG TSXMX BTUIA DNGMG PSREL XNJEL XVRVP RTULH DNQWT WDTYG BPHXT FALJH ASVBF XNGLL CHRZB WELEK MSJIK NBHWR JGNMG JSGLX FEYPH AGNRB IEQJT AMRVL CRREM NDGLX RRIMG NSNRW CHRQH AEYEV TAQEB BIPEE WEVKA KOEWA DREMX MTBHH CHRTK DNVRZ CHRCL QOHPW QAIIW XNRMG WOIIF KEE</span><br></pre></td></tr></table></figure>
+
+<p>解密结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">可能的密钥是：JANET</span><br><span class="line">解密后的明文可能是: the almond tree was in tentative blossom the days were longer often ending with magnificent evenings of corrugated pink skies the hunting season was over with hounds and guns put away for six months the vineyards were busy again as the well organized farmers treated their vines and the more lackadaisical neighbors hurried to do the pruning they should have done in november</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，这个破译密文不能太短，越长越准确，密文太短结果都是错。如果大佬有破译短密文（比如一句话的那种），可以教教我交流一下。</p>
+<p>密文太短就有了类似于对每个字母都进行了一个凯撒加密，这种情况我觉得只能强行爆破，26^n^太大了，短一点还好说，又短又不够长的那种，就考验电脑性能了吧。</p>
+<p>欸，新手菜狗，代码写的有点冗杂，我看他们都一百行出头就写完了。有些太过于罗嗦了为了自己看起来方便，欸，还是再接再厉，多向大佬学习！</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>密码学</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>重合指数</tag>
+        <tag>python3</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>html语法学习</title>
+    <url>/2021/11/13/html%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<blockquote>
+<p>写在前面：为了新建一个页面，浪费了一晚上时间，奈何根本看不懂，什么也没搞出来。没有学js和css，自己改主题是不太行了，学习一下html，单独建一个页面样式算了，毕竟这样目前看来似乎最简单，权当学习html了。 （本次学习均来自W3school）</p>
+</blockquote>
+<h1 id="基本HTML标签-成对"><a href="#基本HTML标签-成对" class="headerlink" title="基本HTML标签(成对)"></a>基本HTML标签(成对)</h1><p>&lt;html&gt; 与 &lt;/html&gt; 之间的文本描述网页</p>
+<p>&lt;body&gt; 与 &lt;/body&gt; 之间的文本是可见的页面内容</p>
+<p>HTML 标题是通过&lt;h1&gt; ~ &lt;h6&gt; 等标签进行定义的。</p>
+<p>HTML 段落是通过 &lt;p&gt; 标签进行定义的。</p>
+<p>HTML 链接是通过&lt;a&gt; 标签进行定义的。</p>
+<p>HTML 图像是通过 &lt;img&gt; 标签进行定义的。</p>
+<p>&lt;br/&gt;是没有关闭标签的空元素（&lt;br/&gt; 标签定义换行）。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>这是标题一<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span>&gt;</span>这是标题二<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span>&gt;</span>这是标题三<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span> 这是一个段落。<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;https://www.baidu.com&quot;</span>&gt;</span>This is a link<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;2.png&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="image-20211113235826940.png" alt="image-20211113235826940"></p>
+<h1 id="HTML属性"><a href="#HTML属性" class="headerlink" title="HTML属性"></a>HTML属性</h1><p>HTML 标签可以拥有<em>属性</em>。属性提供了有关 HTML 元素的<em>更多的信息</em>。</p>
+<p>属性总是以名称/值对的形式出现，比如：*name=”value”*。</p>
+<p>属性总是在 HTML 元素的<em>开始标签</em>中规定。</p>
+<blockquote>
+<p>一些常用属性，属性很多，其他的就只能用到的时候再学习了。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">属性</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">dir</td>
+<td align="left">规定元素中内容的文本方向。</td>
+</tr>
+<tr>
+<td align="left">id</td>
+<td align="left">规定元素的唯一 id。</td>
+</tr>
+<tr>
+<td align="left">class</td>
+<td align="left">规定元素的一个或多个类名（引用样式表中的类）。</td>
+</tr>
+<tr>
+<td align="left">href</td>
+<td align="left">指定网址链接。</td>
+</tr>
+<tr>
+<td align="left">style</td>
+<td align="left">规定元素的行内样式。</td>
+</tr>
+<tr>
+<td align="left">align</td>
+<td align="left">拥有关于对齐方式的附加信息。</td>
+</tr>
+<tr>
+<td align="left">bgcolor</td>
+<td align="left">拥有关于背景颜色的附加信息。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>始终为属性值加引号:</p>
+<p>属性值应该始终被包括在引号内。双引号是最常用的，不过使用单引号也没有问题。</p>
+<p>在某些个别的情况下，比如属性值本身就含有双引号，那么您必须使用单引号。</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span> <span class="attr">bgcolor</span>=<span class="string">&quot;green&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span> <span class="attr">align</span>=<span class="string">&quot;center&quot;</span>&gt;</span>这是标题一<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h2</span> <span class="attr">align</span>=<span class="string">&quot;left&quot;</span>&gt;</span>这是标题二<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h3</span> <span class="attr">align</span>=<span class="string">&quot;right&quot;</span>&gt;</span>这是标题三<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span> 这是一个段落。<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;https://www.baidu.com&quot;</span>&gt;</span>This is a link<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;2.png&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="image-20211114001744604.png" alt="image-20211114001744604"></p>
+]]></content>
+      <categories>
+        <category>HTML</category>
+      </categories>
+      <tags>
+        <tag>HTML</tag>
+        <tag>博客搭建</tag>
+        <tag>编程语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>butterfly主题美化</title>
+    <url>/2021/11/27/butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/</url>
+    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>一直以来都想找个机会换个主题，但是奈何人菜又懒，拖了又拖，直到现在。疫情封校，游戏也被我卸了，刚好坐着没什么事情，想着干脆就搞一下这个算了。记录一下这个主题的美化过程吧，以后可能用得到，主要是像简洁的方向改变。</p>
+<blockquote>
+<p>都是网上各处搜罗来抄的，哈哈哈哈，学习up!!!</p>
+</blockquote>
+<h1 id="0x01-添加字数统计"><a href="#0x01-添加字数统计" class="headerlink" title="0x01 添加字数统计"></a>0x01 添加字数统计</h1><h2 id="1-安装依赖"><a href="#1-安装依赖" class="headerlink" title="1.安装依赖"></a>1.安装依赖</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cnpm install hexo-wordcount --save</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-在主题目录下的-config-yml文件进行配置"><a href="#2-在主题目录下的-config-yml文件进行配置" class="headerlink" title="2.在主题目录下的_config.yml文件进行配置"></a>2.在主题目录下的_config.yml文件进行配置</h2><p><img src="butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/image-20211130143906121.png" alt="image-20211130143906121"></p>
+<h1 id="0x02-添加搜索"><a href="#0x02-添加搜索" class="headerlink" title="0x02 添加搜索"></a>0x02 添加搜索</h1><h2 id="1-安装依赖-1"><a href="#1-安装依赖-1" class="headerlink" title="1.安装依赖"></a>1.安装依赖</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-在主题目录下的-config-yml文件进行配置-1"><a href="#2-在主题目录下的-config-yml文件进行配置-1" class="headerlink" title="2.在主题目录下的_config.yml文件进行配置"></a>2.在主题目录下的_config.yml文件进行配置</h2><p><img src="butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/image-20211130145700860.png" alt="image-20211130145700860"></p>
+<h1 id="0x03-添加评论"><a href="#0x03-添加评论" class="headerlink" title="0x03 添加评论"></a>0x03 添加评论</h1>]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>主题美化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>初学Java一次简单作业</title>
+    <url>/2021/11/23/%E5%88%9D%E5%AD%A6Java%E4%B8%80%E6%AC%A1%E7%AE%80%E5%8D%95%E4%BD%9C%E4%B8%9A/</url>
+    <content><![CDATA[<blockquote>
+<p>跟C++还是有点区别的</p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="0x01-阶乘累加和"><a href="#0x01-阶乘累加和" class="headerlink" title="0x01 阶乘累加和"></a>0x01 阶乘累加和</h1><blockquote>
+<p>计算多项式1！+2！+3！…+n!，当多项式之和超过10000时停止，并输出累加之和以及n的值。</p>
+</blockquote>
+<p>没啥好说的，挺简单的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">jiecheng</span> </span>&#123;   </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] jie = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line">        <span class="keyword">int</span>[] num = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];  </span><br><span class="line">        jie[<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">        jie[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">        num[<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">           <span class="keyword">if</span>(num[i-<span class="number">1</span>]&gt;<span class="number">10000</span>)&#123;</span><br><span class="line">               System.out.println(<span class="string">&quot;累加和：&quot;</span>+num[i-<span class="number">1</span>]);</span><br><span class="line">               System.out.println(<span class="string">&quot;n：&quot;</span>+<span class="string">&quot; &quot;</span>+(i-<span class="number">1</span>));</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">else</span> &#123;</span><br><span class="line">            jie[i]=i*jie[i-<span class="number">1</span>];</span><br><span class="line">            num[i]=num[i-<span class="number">1</span>]+jie[i];</span><br><span class="line">        &#125;</span><br><span class="line">        &#125;    </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还有一种动态数组的方法，只不过编译时安全性有点小问题，但是结果是一样的。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">jiecheng</span> </span>&#123;</span><br><span class="line">    <span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span> <span class="comment">//跳过安全性检查，去掉有警告就让人很难受</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        ArrayList jie = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        ArrayList num = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        jie.add(<span class="number">0</span>,<span class="number">1</span>);</span><br><span class="line">        jie.add(<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">        num.add(<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;<span class="number">200</span>;i++)&#123;</span><br><span class="line">           <span class="keyword">if</span>((<span class="keyword">int</span>)num.get(i-<span class="number">1</span>)&gt;<span class="number">10000</span>)&#123;</span><br><span class="line">               System.out.println(<span class="string">&quot;累加和：&quot;</span>+(<span class="keyword">int</span>)num.get(i-<span class="number">1</span>));</span><br><span class="line">               System.out.println(<span class="string">&quot;n：&quot;</span>+<span class="string">&quot; &quot;</span>+(i-<span class="number">1</span>));</span><br><span class="line">               <span class="keyword">break</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">else</span> &#123;</span><br><span class="line">            jie.add(i,i*((<span class="keyword">int</span>)jie.get(i-<span class="number">1</span>)));</span><br><span class="line">            num.add(i,((<span class="keyword">int</span>)num.get(i-<span class="number">1</span>)+(<span class="keyword">int</span>)jie.get(i)));</span><br><span class="line">        &#125;</span><br><span class="line">        &#125;  </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="image-20211123153656938.png" alt="image-20211123153656938"></p>
+<h1 id="0x02-字符判断"><a href="#0x02-字符判断" class="headerlink" title="0x02 字符判断"></a>0x02 字符判断</h1><blockquote>
+<p>从标准输入端输入一个字符，判断字符是数字、还是西文字母还是其他的字符。</p>
+</blockquote>
+<p>java的输入确实有点麻烦啊。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">panduan</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            Scanner s = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">            String n=s.next();</span><br><span class="line">            <span class="keyword">if</span>((<span class="keyword">int</span>)n.charAt(<span class="number">0</span>)&gt;=<span class="number">48</span>&amp;&amp;(<span class="keyword">int</span>)n.charAt(<span class="number">0</span>)&lt;=<span class="number">57</span>)</span><br><span class="line">                &#123;System.out.println(n+<span class="string">&quot; &quot;</span>+<span class="string">&quot;这是数字&quot;</span>);<span class="keyword">continue</span>;&#125;</span><br><span class="line">            <span class="keyword">if</span>(((<span class="keyword">int</span>)n.charAt(<span class="number">0</span>)&gt;=<span class="number">97</span>&amp;&amp;(<span class="keyword">int</span>)n.charAt(<span class="number">0</span>)&lt;=<span class="number">122</span>)||((<span class="keyword">int</span>)n.charAt(<span class="number">0</span>)&gt;=<span class="number">65</span>&amp;&amp;(<span class="keyword">int</span>)n.charAt(<span class="number">0</span>)&lt;=<span class="number">90</span>))</span><br><span class="line">                &#123;System.out.println(n+<span class="string">&quot; &quot;</span>+<span class="string">&quot;这是西文字母&quot;</span>);<span class="keyword">continue</span>;&#125;</span><br><span class="line">            System.out.println(n+<span class="string">&quot; &quot;</span>+<span class="string">&quot;这是其他字符&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="image-20211123164306376.png" alt="image-20211123164306376"></p>
+<h1 id="0x03-辗转相除法"><a href="#0x03-辗转相除法" class="headerlink" title="0x03 辗转相除法"></a>0x03 辗转相除法</h1><blockquote>
+<p>利用辗转相除法（欧几里得算法）求两个正整数的最大公约数。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">oujilide</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> r;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;   </span><br><span class="line">            Scanner s = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">            <span class="keyword">int</span> a=s.nextInt();</span><br><span class="line">            <span class="keyword">int</span> b=s.nextInt();</span><br><span class="line">            <span class="keyword">while</span>(a%b!=<span class="number">0</span>)&#123;</span><br><span class="line">                r=a%b;</span><br><span class="line">                a=b;</span><br><span class="line">                b=r;</span><br><span class="line">            &#125;</span><br><span class="line">        System.out.println(b);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="image-20211123154521370.png" alt="image-20211123154521370"></p>
+<h1 id="0x04-中国剩余定理"><a href="#0x04-中国剩余定理" class="headerlink" title="0x04 中国剩余定理"></a>0x04 中国剩余定理</h1><blockquote>
+<p>假设一个数在1000到1100之间，那除以3结果余2,；除以5结果余3,；除以7结果余2（中国剩余定理），求此数。</p>
+</blockquote>
+<p>既然指定了数字，那就挺好求的，原来是我想多了，先这样吧，等我考完试详细写一个中国剩余定理。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ZGshengyu</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">    	<span class="keyword">int</span>[] m=&#123;<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>&#125;;</span><br><span class="line">    	<span class="keyword">int</span>[] r=&#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">2</span>&#125;;</span><br><span class="line">    	<span class="keyword">int</span>[] M=&#123;<span class="number">5</span>*<span class="number">7</span>,<span class="number">3</span>*<span class="number">7</span>,<span class="number">3</span>*<span class="number">5</span>&#125;;</span><br><span class="line">    	<span class="keyword">int</span>[] M1=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">3</span>];       <span class="comment">//M逆元</span></span><br><span class="line">    	<span class="keyword">int</span> x=<span class="number">0</span>,mod=<span class="number">1</span>;  </span><br><span class="line">       	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>((M[i]*j)%m[i]==<span class="number">1</span>)&#123;</span><br><span class="line">                    M1[i]=j;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            mod=mod*m[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">3</span>;i++)&#123;</span><br><span class="line">            x+=(M[i]*M1[i]*r[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        x=x%mod;</span><br><span class="line">        <span class="keyword">while</span>(x&lt;<span class="number">1000</span>)&#123;x+=mod;&#125;</span><br><span class="line">        System.out.println(x);</span><br><span class="line">    &#125; </span><br><span class="line">&#125;    </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="image-20211123162318523.png" alt="image-20211123162318523"></p>
+<h1 id="0x05-小球路程"><a href="#0x05-小球路程" class="headerlink" title="0x05 小球路程"></a>0x05 小球路程</h1><blockquote>
+<p>小球从100米高度自由落下，每次触地后反弹到原来高度的一半，求第10次触地时经历的总路程以及第10次反弹高度。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">xiaoqiu</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span>[] height =<span class="keyword">new</span> <span class="keyword">double</span>[<span class="number">12</span>];</span><br><span class="line">        <span class="keyword">double</span> num=<span class="number">100</span>;</span><br><span class="line">        height[<span class="number">1</span>]=<span class="number">100</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=<span class="number">11</span>;i++)&#123; </span><br><span class="line">            height[i]=height[i-<span class="number">1</span>]/<span class="number">2</span>;</span><br><span class="line">            num=num+<span class="number">2</span>*height[i];</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;总路程：&quot;</span>+(num-height[<span class="number">11</span>])+<span class="string">&quot;米&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;第十次高度：&quot;</span>+height[<span class="number">11</span>]+<span class="string">&quot;米&quot;</span>);</span><br><span class="line">    &#125; </span><br><span class="line">&#125;    </span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="image-20211123164108866.png" alt="image-20211123164108866"></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>编程语言</tag>
+        <tag>Java</tag>
+        <tag>编程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>部分算法实验复习整理</title>
+    <url>/2021/11/10/%E9%83%A8%E5%88%86%E7%AE%97%E6%B3%95%E5%AE%9E%E9%AA%8C%E5%A4%8D%E4%B9%A0%E6%95%B4%E7%90%86/</url>
+    <content><![CDATA[<blockquote>
+<p>一次头秃的复习。</p>
+</blockquote>
+<span id="more"></span>
+
+<h1 id="0x01-排列问题"><a href="#0x01-排列问题" class="headerlink" title="0x01 排列问题"></a>0x01 排列问题</h1><blockquote>
+<p>题目描述  </p>
+</blockquote>
+<p>​    输入一个可能含有重复字符的字符串，打印出该字符串中所有字符的全排列。</p>
+<blockquote>
+<p>输入     </p>
+</blockquote>
+<p>​    单组测试数据，输入数据是一个长度不超过10个字符的字符串，以逗号结尾。</p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    打印出该字符串中所有字符的全排列。以字典序顺序输出，用空格分隔。</p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+ <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">abc,</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">abc acb bac bca cab cba</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p> 主要还是看全排列核心代码吧，不重复情况下的全排列，重复的加个排序就好了。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">perm</span><span class="params">(T list[], <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low == high) &#123;                                 <span class="comment">// 先判断边界</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= high; i++) &#123;</span><br><span class="line">            cout &lt;&lt; list[i];</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = low; i &lt;= high; i++) &#123;   </span><br><span class="line">                <span class="built_in">swap</span>(list[low], list[i]);</span><br><span class="line">                <span class="built_in">perm</span>(list, low + <span class="number">1</span>, high);</span><br><span class="line">                <span class="built_in">swap</span>(list[low], list[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完整代码</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; </span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">perm</span><span class="params">(T list[], <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> t;</span><br><span class="line">    <span class="keyword">if</span> (low == high) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= high; i++) &#123;</span><br><span class="line">            cout &lt;&lt; list[i];</span><br><span class="line">        &#125;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = low; i &lt;= high; i++) &#123;</span><br><span class="line">        	<span class="keyword">for</span> (<span class="keyword">int</span> is = low; is &lt;= high; is++)</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> js = is; js &lt;= high; js++) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (list[js] &lt; list[is]) &#123;</span><br><span class="line">                        t = list[js];</span><br><span class="line">                        list[js] = list[is];</span><br><span class="line">                        list[is ] = t;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;                              <span class="comment">//每次交换前先排序</span></span><br><span class="line">            <span class="keyword">if</span> (list[i] == list[i + <span class="number">1</span>]) &#123;      <span class="comment">// 遇到重复跳过一次重复排列</span></span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125; </span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">swap</span>(list[low], list[i]);</span><br><span class="line">                <span class="built_in">perm</span>(list, low + <span class="number">1</span>, high);</span><br><span class="line">                <span class="built_in">swap</span>(list[low], list[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    string str;</span><br><span class="line">    cin &gt;&gt; str;</span><br><span class="line">    <span class="keyword">int</span> s = str.<span class="built_in">length</span>() - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">char</span> st[s], t;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s; i++)</span><br><span class="line">        st[i] = str[i];</span><br><span class="line">    <span class="built_in">sort</span>(st,st+s);   <span class="comment">//sort函数挺好用的，默认升序排列</span></span><br><span class="line">    <span class="built_in">perm</span>(st, <span class="number">0</span>, s - <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++ sort()函数升序或降序排序方法：</p>
+<blockquote>
+<p>可以用C++里的模板库（什么也不写，默认升序）</p>
+<p>升序：less<data_type>();</p>
+<p>降序：greater<data_type>();</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a[<span class="number">4</span>]=&#123;<span class="number">1</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="built_in">sort</span>(a,a+<span class="number">4</span>);    <span class="comment">// 升序</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)</span><br><span class="line">        cout&lt;&lt;a[i]&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">        cout&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">sort</span>(a,a+<span class="number">4</span>,greater&lt;<span class="keyword">int</span>&gt;());  <span class="comment">//降序</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)</span><br><span class="line">        cout&lt;&lt;a[i]&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是现在有一个next_permutation()函数可以直接进行全排列，考试利器啊</p>
+<blockquote>
+<p>升序全排列：next_permutation()；</p>
+<p>降序全排列：prev_permutation();</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	string str;</span><br><span class="line">    cin &gt;&gt; str;</span><br><span class="line">    <span class="keyword">int</span> s = str.<span class="built_in">length</span>() - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">char</span> st[s];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s; i++)</span><br><span class="line">        st[i] = str[i];</span><br><span class="line">    <span class="built_in">sort</span>(st,st+s);</span><br><span class="line">    <span class="keyword">do</span>  </span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s; i++)</span><br><span class="line">        cout&lt;&lt;st[i];  </span><br><span class="line">        cout&lt;&lt;<span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;<span class="keyword">while</span>(<span class="built_in">next_permutation</span>(st,st+s));  </span><br><span class="line"><span class="comment">//    cout&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//    sort(st,st+s,greater&lt;char&gt;());</span></span><br><span class="line"><span class="comment">//    do  </span></span><br><span class="line"><span class="comment">//    &#123;  </span></span><br><span class="line"><span class="comment">//        for (int i = 0; i &lt; s; i++)</span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;st[i];  </span></span><br><span class="line"><span class="comment">//        cout&lt;&lt;&quot; &quot;;</span></span><br><span class="line"><span class="comment">//    &#125;while(prev_permutation(st,st+s));</span></span><br><span class="line"><span class="comment">//    // 输出结果：cba cab bca bac acb abc </span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x02-跳台阶"><a href="#0x02-跳台阶" class="headerlink" title="0x02 跳台阶"></a>0x02 跳台阶</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级的台阶总共有多少种跳法。 </p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    多组测试样例。每组测试样例包含一个整数n。(1&lt;=n&lt;=100)</p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    每组测试样例输出一行，表示青蛙跳上n级台阶的跳法数量. </p>
+<p>​    所得到的结果模1000000007 </p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">3</span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">3</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>设f(n)为跳法数量，最后跳一阶时，跳法是f(n-1),最后跳两阶时，跳法是f(n-2)那么f(n)=f(n-1)+f(n-2)。</p>
+<p>很容易知道，f(1)=1；f(2)=2； f(n)=f(n-1)+f(n-2)，n&gt;2；很明显就是斐波那契数列的形式。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//用递归，中间大量重复计算，果然时间超限</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m=<span class="number">1000000007</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans =<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">if</span>(n&lt;=<span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		ans=<span class="built_in">f</span>(n<span class="number">-1</span>)%m+<span class="built_in">f</span>(n<span class="number">-2</span>)%m;</span><br><span class="line">	&#125;</span><br><span class="line">	 <span class="keyword">return</span> ans%m;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">while</span>(cin&gt;&gt;n)&#123;</span><br><span class="line">        <span class="keyword">int</span> t;</span><br><span class="line">        t=<span class="built_in">f</span>(n)%m; </span><br><span class="line">        cout&lt;&lt;t&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//动太规划，我们可以用一个数组记录计算结果，避免重复计算</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m=<span class="number">1000000007</span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span></span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">	<span class="keyword">if</span>(n&lt;=<span class="number">2</span>) <span class="keyword">return</span> n;</span><br><span class="line">    <span class="keyword">int</span> ans[n+<span class="number">5</span>],k=<span class="number">3</span>;</span><br><span class="line">	ans[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">	ans[<span class="number">2</span>]=<span class="number">2</span>;</span><br><span class="line">	<span class="keyword">while</span>(k&lt;=n)&#123;</span><br><span class="line">	  ans[k]=ans[k<span class="number">-1</span>]%m+ans[k<span class="number">-2</span>]%m;</span><br><span class="line">	  k++;</span><br><span class="line">	&#125; </span><br><span class="line">	<span class="keyword">return</span> ans[n]%m;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="keyword">while</span>(cin&gt;&gt;n)&#123;</span><br><span class="line">        <span class="keyword">int</span> t;</span><br><span class="line">        t=<span class="built_in">f</span>(n)%m; </span><br><span class="line">        cout&lt;&lt;t&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x03-快速幂"><a href="#0x03-快速幂" class="headerlink" title="0x03 快速幂"></a>0x03 快速幂</h1><blockquote>
+<p>题目描述      </p>
+</blockquote>
+<p><img src="20180914130647_85638.png" alt="img"> </p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    多组测试样例，最多50组。每组测试样例给定一个整数x(1&lt;=x&lt;=25000) </p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    对每个样例，输出一行，代表f(x)对100000007取余的结果。 </p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">33</span><br><span class="line">289</span><br><span class="line">3414</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>关键代码，求a^b^(%m)的值。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 快速幂的计算采用二分的思路，除2相当于二进制右移一位，b为单数时取出一个a到r中，只有a自乘一次时，b右移一位 */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m=<span class="number">100000007</span>;</span><br><span class="line"><span class="function">ll <span class="title">p</span><span class="params">(ll a,ll b)</span></span>&#123;    </span><br><span class="line">	ll r=<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(b)&#123;</span><br><span class="line">		<span class="keyword">if</span>(b&amp;<span class="number">1</span>) r=r*a%m;</span><br><span class="line">		a=a*a%m;</span><br><span class="line">		b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> r%m;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完整代码</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ll long long</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> m=<span class="number">100000007</span>;</span><br><span class="line"><span class="function">ll <span class="title">p</span><span class="params">(ll a,ll b)</span></span>&#123;    <span class="comment">//a的b次方 </span></span><br><span class="line">	ll r=<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(b)&#123;</span><br><span class="line">		<span class="keyword">if</span>(b&amp;<span class="number">1</span>) r=r*a%m;</span><br><span class="line">		a=a*a%m;</span><br><span class="line">		b&gt;&gt;=<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> r%m; </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;	</span><br><span class="line">	ll x,t=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(cin&gt;&gt;x)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">for</span> (ll j = <span class="number">1</span>; j &lt;= x; j++) &#123;</span><br><span class="line">                t = (t %m+ <span class="built_in">p</span>(j, j))%m;</span><br><span class="line">            &#125;</span><br><span class="line">        cout &lt;&lt; t + <span class="number">1</span> &lt;&lt; endl;</span><br><span class="line">        t = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x04-凯撒加密法"><a href="#0x04-凯撒加密法" class="headerlink" title="0x04 凯撒加密法"></a>0x04 凯撒加密法</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    凯撒加密法，或称恺撒加密、恺撒变换、变换加密，是一种最简单且最广为人知的加密技术。它是一种替换加密的技术，明文中的所有字母都在字母表上向后（或向前）按照一个固定数目进行偏移后被替换成密文。<br>​     例如，当偏移量是左移3的时候：<br> 明文字母表：ABCDEFGHIJKLMNOPQRSTUVWXYZ<br> 密文字母表：DEFGHIJKLMNOPQRSTUVWXYZABC<br> 使用时，加密者查找明文字母表中需要加密的消息中的每一个字母所在位置，并且写下密文字母表中对应的字母。需要解密的人则根据事先已知的密钥反过来操作，得到原来的明文。例如：<br>​     明文：THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG<br>​     密文：WKH TXLFN EURZQ IRA MXPSV RYHU WKH ODCB GRJ<br>​     现在给定你一个字符串S（长度不会超过1000000）和一个整数k（-1000000000&lt;=k&lt;=1000000000），分别代表接受者收到的密文和在加密该密文时向后的偏移量，你的任务是计算出原来的明文<br>​     注意：只有字母在加密时才会发生偏移，其它字符保持不变</p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    输入包含多组数据，其中第一行为数据组数T（T&lt;=10）<br>​    每组数据第一行为一个字符串S，由数字、字母以及常见字符组成（不含空格），第二行为一个整数k代表加密时向后的偏移量（|S|&lt;=1000000,-1000000000&lt;=k&lt;=1000000000）</p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​      对每组数据，输出一行字符串，代表输入中的密文对应的明文。</p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line">DEFGHIJKLMNOPQRSTUVWXYZABC</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ABCDEFGHIJKLMNOPQRSTUVWXYZ</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>凯撒还是挺简单的，关键代码</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// a[i]是除余26后的偏移量</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;t;i++)&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="built_in"><span class="keyword">int</span></span>(str[i].<span class="built_in">length</span>());j++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(str[i][j]&gt;=<span class="string">&#x27;A&#x27;</span>&amp;&amp;str[i][j]&lt;=<span class="string">&#x27;Z&#x27;</span>)</span><br><span class="line">			str[i][j]=<span class="string">&#x27;A&#x27;</span>+(str[i][j]-<span class="string">&#x27;A&#x27;</span>-a[i]+<span class="number">26</span>)%<span class="number">26</span>;</span><br><span class="line">		<span class="keyword">if</span>(str[i][j]&gt;=<span class="string">&#x27;a&#x27;</span>&amp;&amp;str[i][j]&lt;=<span class="string">&#x27;z&#x27;</span>)</span><br><span class="line">			str[i][j]=<span class="string">&#x27;a&#x27;</span>+(str[i][j]-<span class="string">&#x27;a&#x27;</span>-a[i]+<span class="number">26</span>)%<span class="number">26</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	cout&lt;&lt;str[i]&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>完整代码</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string str[<span class="number">15</span>];</span><br><span class="line"><span class="keyword">int</span> t,a[<span class="number">15</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cin&gt;&gt;t;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;t;i++)&#123;</span><br><span class="line">		cin&gt;&gt;str[i];</span><br><span class="line">		cin&gt;&gt;a[i];</span><br><span class="line">		a[i]%=<span class="number">26</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;t;i++)&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="built_in"><span class="keyword">int</span></span>(str[i].<span class="built_in">length</span>());j++)&#123;</span><br><span class="line">			<span class="keyword">if</span>(str[i][j]&gt;=<span class="string">&#x27;A&#x27;</span>&amp;&amp;str[i][j]&lt;=<span class="string">&#x27;Z&#x27;</span>)</span><br><span class="line">				str[i][j]=<span class="string">&#x27;A&#x27;</span>+(str[i][j]-<span class="string">&#x27;A&#x27;</span>-a[i]+<span class="number">26</span>)%<span class="number">26</span>;</span><br><span class="line">			<span class="keyword">if</span>(str[i][j]&gt;=<span class="string">&#x27;a&#x27;</span>&amp;&amp;str[i][j]&lt;=<span class="string">&#x27;z&#x27;</span>)</span><br><span class="line">				str[i][j]=<span class="string">&#x27;a&#x27;</span>+(str[i][j]-<span class="string">&#x27;a&#x27;</span>-a[i]+<span class="number">26</span>)%<span class="number">26</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		cout&lt;&lt;str[i]&lt;&lt;endl;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x05-Vigenere-密码"><a href="#0x05-Vigenere-密码" class="headerlink" title="0x05 Vigenère 密码"></a>0x05 Vigenère 密码</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    16 世纪法国外交家 Blaise de Vigenère 设计了一种多表密码加密算法——Vigenère 密码。Vigenère 密码的加密解密算法简单易用，且破译难度比较高，曾在美国南北战争中为南军所广泛使用。 </p>
+<p>​    在密码学中，我们称需要加密的信息为明文，用 M<em>M</em> 表示；称加密后的信息为    密文，用 C<em>C</em> 表示；而密钥是一种参数，是将明文转换为密文或将密文转换为明文的算法中输入的数据，记为 k<em>k</em>。 在 Vigenère 密码中，密钥 k<em>k</em> 是一个字母串，<em>k</em>=<em>k1k2…kn</em>。当明文 M = m1m2…mn 时，得到的密文 C = c1c2…cn ，其中 ci = mi ® ki，运算 ® 的规则如下表所示：<br>​<img src="20180910173109_58996.png" alt="img"><br>​    Vigenère 加密在操作时需要注意：</p>
+<ol>
+<li>® 运算忽略参与运算的字母的大小写，并保持字母在明文 M<em>M</em> 中的大小写形式； </li>
+<li>当明文 M<em>M</em> 的长度大于密钥 k<em>k</em> 的长度时，将密钥 k<em>k</em> 重复使用。 例如，明文 M=<em>M</em>=Helloworld，密钥 k=<em>k</em>=abc时，密文 C=<em>C</em>=Hfnlpyosnd。<br>​    <img src="20180910173353_81009.png" alt="img"> <blockquote>
+<p>输入</p>
+</blockquote>
+</li>
+</ol>
+<p>​    第一行为一个字符串，表示密钥 k<em>k</em>，长度不超过 100100，其中仅包含大小写字母。 </p>
+<p>​    第二行为一个字符串，表示经加密后的密文，长度不超过 10001000，其中仅包含大小写字母。 </p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>输出共 1 行，一个字符串，表示输入密钥和密文所对应的明文。</p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CompleteVictory</span><br><span class="line">Yvqgpxaimmklongnzfwpvxmniytm</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Wherethereisawillthereisaway</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>这个跟凯撒一样啊，稍微改下就行了。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line">string str,k;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	cin&gt;&gt;k;</span><br><span class="line">	cin&gt;&gt;str;</span><br><span class="line">	<span class="keyword">int</span> l=<span class="built_in"><span class="keyword">int</span></span>(k.<span class="built_in">length</span>());  <span class="comment">//先计算每一位偏移量</span></span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;l;i++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(k[i]&gt;=<span class="string">&#x27;A&#x27;</span>&amp;&amp;k[i]&lt;=<span class="string">&#x27;Z&#x27;</span>)</span><br><span class="line">			k[i]=k[i]-<span class="string">&#x27;A&#x27;</span>;</span><br><span class="line">		<span class="keyword">if</span>(k[i]&gt;=<span class="string">&#x27;a&#x27;</span>&amp;&amp;k[i]&lt;=<span class="string">&#x27;z&#x27;</span>)</span><br><span class="line">			k[i]=k[i]-<span class="string">&#x27;a&#x27;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="built_in"><span class="keyword">int</span></span>(str.<span class="built_in">length</span>());j++)&#123;</span><br><span class="line">		<span class="keyword">if</span>(str[j]&gt;=<span class="string">&#x27;A&#x27;</span>&amp;&amp;str[j]&lt;=<span class="string">&#x27;Z&#x27;</span>)</span><br><span class="line">			str[j]=<span class="string">&#x27;A&#x27;</span>+(str[j]-<span class="string">&#x27;A&#x27;</span>-k[j%l]+<span class="number">26</span>)%<span class="number">26</span>;</span><br><span class="line">		<span class="keyword">if</span>(str[j]&gt;=<span class="string">&#x27;a&#x27;</span>&amp;&amp;str[j]&lt;=<span class="string">&#x27;z&#x27;</span>)</span><br><span class="line">			str[j]=<span class="string">&#x27;a&#x27;</span>+(str[j]-<span class="string">&#x27;a&#x27;</span>-k[j%l]+<span class="number">26</span>)%<span class="number">26</span>;</span><br><span class="line">			&#125;</span><br><span class="line">	cout&lt;&lt;str&lt;&lt;endl;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x06-最长子序列"><a href="#0x06-最长子序列" class="headerlink" title="0x06 最长子序列"></a>0x06 最长子序列</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    在一个数组中找出和最大的连续几个数。（至少包含一个数） </p>
+<p>​    例如： </p>
+<p>​    数组A[] = [-2,1,-3,4,-1,2,1,-5,4]，则连续的子序列[4,-1,2,1]有最大的和6. </p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    第一行输入一个不超过1000的整数n。 </p>
+<p>​    第二行输入n个整数A[i]。 </p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    输出一个整数，表示最大的和。 </p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">3</span><br><span class="line">1 1 -2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>没时间了，后面直接背代码吧。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; </span><br><span class="line"><span class="keyword">int</span> dp[<span class="number">1010</span>];           </span><br><span class="line"><span class="keyword">int</span> ans;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n, a[<span class="number">1010</span>];                 </span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cin &gt;&gt; a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    ans = dp[<span class="number">0</span>] = a[<span class="number">0</span>];                 </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt; n; j++) &#123;            </span><br><span class="line">        <span class="keyword">if</span> (dp[j - <span class="number">1</span>] &gt; <span class="number">0</span>) &#123;         </span><br><span class="line">            dp[j] = dp[j - <span class="number">1</span>] + a[j];       </span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            dp[j] = a[j];</span><br><span class="line">        &#125;</span><br><span class="line">        ans = <span class="built_in">max</span>(dp[j], ans);          </span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x07-三值排序"><a href="#0x07-三值排序" class="headerlink" title="0x07  三值排序"></a>0x07  三值排序</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    排序是一种很频繁的计算任务。一个实际的例子是，当我们给某项竞赛的优胜者按金银铜牌排序的时候。在这个任务中可能的值只有三种1，2和3。我们用交换的方法把他排成升序的。</p>
+<p>​    写一个程序计算出，计算出的一个包括1、2、3三种值的数字序列，排成升序所需的最少交换次数。</p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    输入第1行为类别的数量N（1≤N≤1000）</p>
+<p>​    输入第2行到第N+1行，每行包括一个数字（1或2或3）。</p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    输出包含一行，为排成升序所需的最少交换次数。</p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">9</span><br><span class="line">2</span><br><span class="line">2</span><br><span class="line">1</span><br><span class="line">3</span><br><span class="line">3</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//网上嫖的</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std; </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="keyword">int</span> *a = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line">    <span class="keyword">int</span> i, c1 = <span class="number">0</span>, c2 = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; n; ++i)&#123;</span><br><span class="line">        cin &gt;&gt; a[i];</span><br><span class="line">        <span class="keyword">if</span>(a[i] == <span class="number">1</span>)&#123;</span><br><span class="line">            ++c1;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a[i] == <span class="number">2</span>)&#123;</span><br><span class="line">            ++c2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> c12 = <span class="number">0</span>, c13 = <span class="number">0</span>, c21 = <span class="number">0</span>, c23 = <span class="number">0</span>, c31 = <span class="number">0</span>, c32 = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; c1; ++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(a[i] == <span class="number">2</span>)&#123;</span><br><span class="line">            ++c12;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a[i] == <span class="number">3</span>)&#123;</span><br><span class="line">            ++c13;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(i = c1; i &lt; c1 + c2; ++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(a[i] == <span class="number">1</span>)&#123;</span><br><span class="line">            ++c21;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a[i] == <span class="number">3</span>)&#123;</span><br><span class="line">            ++c23;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(i = c1 + c2; i &lt; n; ++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(a[i] == <span class="number">1</span>)&#123;</span><br><span class="line">            ++c31;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a[i] == <span class="number">2</span>)&#123;</span><br><span class="line">            ++c32;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> res = <span class="built_in">min</span>(c12, c21) + <span class="built_in">min</span>(c13, c31) + <span class="built_in">min</span>(c23, c32);</span><br><span class="line">    c12 -= c21;</span><br><span class="line">    <span class="keyword">if</span>(c12 &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        c12 = -c12;</span><br><span class="line">    &#125;</span><br><span class="line">    res += c12 * <span class="number">2</span>;</span><br><span class="line">    cout &lt;&lt; res &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x08-最长公共子序列"><a href="#0x08-最长公共子序列" class="headerlink" title="0x08  最长公共子序列"></a>0x08  最长公共子序列</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    一个字符串A的子串被定义成从A中顺次选出若干个字符构成的串。如A=“cdaad” ,顺次选1，3，5个字符就构成子串” cad” ,现给定两个字符串，求它们的最长共公子串。</p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    第一行两个字符串用空格分开。两个串的长度均小于2000 。</p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    最长子串的长度。    </p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">abccd aecd</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">int</span> f[<span class="number">2010</span>][<span class="number">2010</span>];</span><br><span class="line"><span class="keyword">char</span> b[<span class="number">2010</span>],a[<span class="number">2010</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i,j,l1,l2;</span><br><span class="line">    cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">    l1=<span class="built_in">strlen</span>(a);</span><br><span class="line">    l2=<span class="built_in">strlen</span>(b);</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;=l1;i++)</span><br><span class="line">       <span class="keyword">for</span>(j=<span class="number">1</span>;j&lt;=l2;j++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(a[i<span class="number">-1</span>]==b[j<span class="number">-1</span>]) </span><br><span class="line">           f[i][j]=f[i<span class="number">-1</span>][j<span class="number">-1</span>]+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">           f[i][j]=<span class="built_in">max</span>(f[i<span class="number">-1</span>][j],f[i][j<span class="number">-1</span>]);</span><br><span class="line">       &#125;</span><br><span class="line">    cout&lt;&lt;f[l1][l2];</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x09-求第k小"><a href="#0x09-求第k小" class="headerlink" title="0x09 求第k小"></a>0x09 求第k小</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    给定n(1&lt;=n&lt;=1000000)个元素，求第k小数(1&lt;=k&lt;=n)。     </p>
+<blockquote>
+<p>输入     </p>
+</blockquote>
+<p>​    一组样例。第一行输入两个整数n和k。第二行输入n个不同的int范围内的数。 </p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    输出一行，输出第k小数。 </p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">5 2</span><br><span class="line">1 5 3 2 4</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>怎么说呢，这道题本来很长，但是我们可以直接用sort（）函数啊，偷奸耍滑第一名。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n, m;</span><br><span class="line">    cin &gt;&gt; n &gt;&gt; m;</span><br><span class="line">    <span class="keyword">int</span> a[n];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cin &gt;&gt; a[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">sort</span>(a, a + n);</span><br><span class="line">    cout &lt;&lt; a[m - <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x0a-求数组的最长递减子序列"><a href="#0x0a-求数组的最长递减子序列" class="headerlink" title="0x0a 求数组的最长递减子序列"></a>0x0a 求数组的最长递减子序列</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    给定一个整数序列，输出它的最长递减（注意不是“不递增”）子序列。     </p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    输入包括两行，第一行包括一个正整数N（N&lt;=1000），表示输入的整数序列的长度。第二行包括用空格分隔开的N个整数，整数范围区间为[-30000,30000]。 </p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    输出最长递减子序列，数字之间有一个空格。</p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">8</span><br><span class="line">9 4 3 2 5 4 3 2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">9 5 4 3 2</span><br></pre></td></tr></table></figure>
+
+<hr>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n, i, j;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">h</span><span class="params">(n, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">dp</span><span class="params">(n, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">pre</span><span class="params">(n, <span class="number">-1</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        cin &gt;&gt; h[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; i; ++j) &#123;</span><br><span class="line">            <span class="keyword">if</span> (h[j] &gt; h[i] &amp;&amp; dp[j] + <span class="number">1</span> &gt; dp[i]) &#123;</span><br><span class="line">                dp[i] = dp[j] + <span class="number">1</span>;</span><br><span class="line">                pre[i] = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> max_len = <span class="number">1</span>;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (max_len &lt; dp[i]) &#123;</span><br><span class="line">            max_len = dp[i];</span><br><span class="line">            j = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; res;</span><br><span class="line">    <span class="keyword">while</span> (j != <span class="number">-1</span>) &#123;</span><br><span class="line">        res.<span class="built_in">push_back</span>(h[j]);</span><br><span class="line">        j = pre[j];</span><br><span class="line">    &#125;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt;::reverse_iterator rIt = res.<span class="built_in">rbegin</span>();</span><br><span class="line">    cout &lt;&lt; *rIt;</span><br><span class="line">    <span class="keyword">while</span> (++rIt != res.<span class="built_in">rend</span>()) &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; *rIt;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x0b-单词排序"><a href="#0x0b-单词排序" class="headerlink" title="0x0b 单词排序"></a>0x0b 单词排序</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​     小红学会了很多英文单词，妈妈为了帮小红加强记忆，拿出纸、笔，把 N 个单词写在纸上的一行里，小红看了几秒钟后，将这张纸扣在桌子上。妈妈问小红：“你能否将这 N 个单词按照字典排列的顺序，从小到大写出来？”小红按照妈妈的要求写出了答案。现在请你编写程序帮助妈妈检查小红的答案是否正确。注意：所有单词都由小写字母组成，单词两两之间用一个空格分隔。</p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    输入包含两行。</p>
+<p>​    第一行仅包括一个正整数N(0&lt;N≤26)。</p>
+<p>​    第二行包含N个单词，表示妈妈写出的单词，两两之间用一个空格分隔。</p>
+<p>​    单个单词长度不超过1010。</p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​    输出仅有一行。针对妈妈写出的单词，按照字典排列的顺序从小到大排列成一行的结果，每个单词后带一个空格。</p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">4</span><br><span class="line">city boy tree student</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">boy city student tree </span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>似乎挺简单</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    cin &gt;&gt; n;</span><br><span class="line">    string s[n];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        cin &gt;&gt; s[i];</span><br><span class="line">    <span class="built_in">sort</span>(s, s + n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        cout &lt;&lt; s[i] &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x0c-进制转换"><a href="#0x0c-进制转换" class="headerlink" title="0x0c 进制转换"></a>0x0c 进制转换</h1><p>这道题没什么好说的，就是进制转换，我们可以直接用c的输出：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%o&quot;</span>,a);    <span class="comment">//按八进制格式输出</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>,a);    <span class="comment">//按十进制格式输出</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%x&quot;</span>,a);    <span class="comment">//按十六进制格式输出</span></span><br></pre></td></tr></table></figure>
+
+<p>或者**itoa()**函数，将一个10进制的数转化为n进制的值、其返回值为char型。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//itoa(a,result,b); </span></span><br><span class="line"><span class="comment">//a为要转换的数，result用来存储转换结果，b为要转变的进制数。</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">10005</span>; </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> a,b;</span><br><span class="line">	<span class="keyword">char</span> result[maxn];</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d%d&quot;</span>,&amp;a,&amp;b);</span><br><span class="line">	itoa(a,result,b);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>,result);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x0d-沙子的质量"><a href="#0x0d-沙子的质量" class="headerlink" title="0x0d 沙子的质量"></a>0x0d 沙子的质量</h1><blockquote>
+<p>题目描述</p>
+</blockquote>
+<p>​    设有N堆沙子排成一排，其编号为1，2，3，…，N（N&lt;  =300）。每堆沙子有一定的数量，可以用一个整数来描述，现在要将N堆沙子合并成为一堆，每次只能合并相邻的两堆，合并的代价为这两堆沙子的数量之和，合并后与这两堆沙子相邻的沙子将和新堆相邻，合并时由于选择的顺序不同，合并的总代价也不相同，如有4堆沙子分别为1 3 5 2我们可以先合并1、2堆，代价为4，得到4 5 2又合并1，2堆，代价为9，得到9  2，再合并得到11，总代价为4+9+11=24，如果第二步是先合并2，3堆，则代价为7，得到4  7，最后一次合并代价为11，总代价为4+7+11=22；问题是：找出一种合理的方法，使总的代价最小。输出最小代价。</p>
+<blockquote>
+<p>输入</p>
+</blockquote>
+<p>​    第一行一个数N表示沙子的堆数N。 第二行N个数，表示每堆沙子的质量。 a[i]&lt; =1000。    </p>
+<blockquote>
+<p>输出</p>
+</blockquote>
+<p>​     合并的最小代价。    </p>
+<blockquote>
+<p>样例输入</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">4</span><br><span class="line">1 3 5 2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>样例输出</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">22</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>肝不动了，就这样随缘吧</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">int</span> n,a,s[<span class="number">1000</span>+<span class="number">10</span>],f[<span class="number">1000</span>+<span class="number">10</span>][<span class="number">1000</span>+<span class="number">10</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    s[<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">    cin&gt;&gt;n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        cin&gt;&gt;a;</span><br><span class="line">        s[i]=s[i<span class="number">-1</span>]+a;</span><br><span class="line">        f[i][i]=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> r=<span class="number">2</span>;r&lt;=n;r++)</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i+r<span class="number">-1</span>&lt;=n;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> k=i+r<span class="number">-1</span>,t=s[i+r<span class="number">-1</span>]-s[i<span class="number">-1</span>];</span><br><span class="line">        f[i][k]=f[i][i]+f[i+<span class="number">1</span>][k]+t;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;=k;j++) </span><br><span class="line">            f[i][k]=<span class="built_in">min</span>(f[i][k],f[i][j]+f[j+<span class="number">1</span>][k]+t);</span><br><span class="line">    &#125;</span><br><span class="line">    cout&lt;&lt;f[<span class="number">1</span>][n]&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>编程</tag>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+</search>
