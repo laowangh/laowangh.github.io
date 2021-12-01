@@ -28,7 +28,7 @@
 <ul>
 <li>明文：CRYPTO IS SHORT FOR CRYPTOGRAPHY</li>
 <li>密钥：ABCD</li>
-<li>密文：==CSASTP== KV SIQUT GQU ==CSASTP==IUAQJB </li>
+<li>密文：<em><strong>CSASTP</strong></em>KV SIQUT GQU <em><strong>CSASTP</strong></em>IUAQJB </li>
 </ul>
 <p>此时重复出现的位置为1和17，那么密钥长度就有可能是16的一个公因数，这些公因数为一组。段落越长越好，求出n组公因数后，求这些公因数的交集，那么可以大致确定密钥长度。</p>
 </blockquote>
@@ -78,6 +78,41 @@
         <tag>密码学</tag>
         <tag>重合指数</tag>
         <tag>python3</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>butterfly主题美化</title>
+    <url>/2021/11/27/butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/</url>
+    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>一直以来都想找个机会换个主题，但是奈何人菜又懒，拖了又拖，直到现在。疫情封校，游戏也被我卸了，刚好坐着没什么事情，想着干脆就搞一下这个算了。记录一下这个主题的美化过程吧，以后可能用得到，主要是像简洁的方向改变。</p>
+<blockquote>
+<p>都是网上各处搜罗来抄的，哈哈哈哈，学习up!!!</p>
+</blockquote>
+<h1 id="0x01-添加字数统计"><a href="#0x01-添加字数统计" class="headerlink" title="0x01 添加字数统计"></a>0x01 添加字数统计</h1><h2 id="1-安装依赖"><a href="#1-安装依赖" class="headerlink" title="1.安装依赖"></a>1.安装依赖</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cnpm install hexo-wordcount --save</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-在主题目录下的-config-yml文件进行配置"><a href="#2-在主题目录下的-config-yml文件进行配置" class="headerlink" title="2.在主题目录下的_config.yml文件进行配置"></a>2.在主题目录下的_config.yml文件进行配置</h2><p><img src="butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/image-20211130143906121.png" alt="image-20211130143906121"></p>
+<h1 id="0x02-添加搜索"><a href="#0x02-添加搜索" class="headerlink" title="0x02 添加搜索"></a>0x02 添加搜索</h1><h2 id="1-安装依赖-1"><a href="#1-安装依赖-1" class="headerlink" title="1.安装依赖"></a>1.安装依赖</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-在主题目录下的-config-yml文件进行配置-1"><a href="#2-在主题目录下的-config-yml文件进行配置-1" class="headerlink" title="2.在主题目录下的_config.yml文件进行配置"></a>2.在主题目录下的_config.yml文件进行配置</h2><p><img src="butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/image-20211130145700860.png" alt="image-20211130145700860"></p>
+<h1 id="0x03-添加评论"><a href="#0x03-添加评论" class="headerlink" title="0x03 添加评论"></a>0x03 添加评论</h1>]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>主题美化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hill密码的学习</title>
+    <url>/2021/12/01/hill%E5%AF%86%E7%A0%81%E7%9A%84%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>密码学</category>
+      </categories>
+      <tags>
+        <tag>密码学</tag>
+        <tag>python3</tag>
+        <tag>矩阵</tag>
       </tags>
   </entry>
   <entry>
@@ -156,28 +191,6 @@
         <tag>HTML</tag>
         <tag>博客搭建</tag>
         <tag>编程语言</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>butterfly主题美化</title>
-    <url>/2021/11/27/butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/</url>
-    <content><![CDATA[<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>一直以来都想找个机会换个主题，但是奈何人菜又懒，拖了又拖，直到现在。疫情封校，游戏也被我卸了，刚好坐着没什么事情，想着干脆就搞一下这个算了。记录一下这个主题的美化过程吧，以后可能用得到，主要是像简洁的方向改变。</p>
-<blockquote>
-<p>都是网上各处搜罗来抄的，哈哈哈哈，学习up!!!</p>
-</blockquote>
-<h1 id="0x01-添加字数统计"><a href="#0x01-添加字数统计" class="headerlink" title="0x01 添加字数统计"></a>0x01 添加字数统计</h1><h2 id="1-安装依赖"><a href="#1-安装依赖" class="headerlink" title="1.安装依赖"></a>1.安装依赖</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cnpm install hexo-wordcount --save</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-在主题目录下的-config-yml文件进行配置"><a href="#2-在主题目录下的-config-yml文件进行配置" class="headerlink" title="2.在主题目录下的_config.yml文件进行配置"></a>2.在主题目录下的_config.yml文件进行配置</h2><p><img src="butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/image-20211130143906121.png" alt="image-20211130143906121"></p>
-<h1 id="0x02-添加搜索"><a href="#0x02-添加搜索" class="headerlink" title="0x02 添加搜索"></a>0x02 添加搜索</h1><h2 id="1-安装依赖-1"><a href="#1-安装依赖-1" class="headerlink" title="1.安装依赖"></a>1.安装依赖</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-generator-searchdb --save</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-在主题目录下的-config-yml文件进行配置-1"><a href="#2-在主题目录下的-config-yml文件进行配置-1" class="headerlink" title="2.在主题目录下的_config.yml文件进行配置"></a>2.在主题目录下的_config.yml文件进行配置</h2><p><img src="butterfly%E4%B8%BB%E9%A2%98%E7%BE%8E%E5%8C%96/image-20211130145700860.png" alt="image-20211130145700860"></p>
-<h1 id="0x03-添加评论"><a href="#0x03-添加评论" class="headerlink" title="0x03 添加评论"></a>0x03 添加评论</h1>]]></content>
-      <categories>
-        <category>hexo</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-        <tag>主题美化</tag>
       </tags>
   </entry>
   <entry>
